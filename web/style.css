@@ -14,9 +14,17 @@ body {
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
-#map {
+#content {
   flex: 1;
   height: 100vh;
+}
+
+#map-view, #leaderboard-view {
+  height: 100%;
+}
+
+#map {
+  height: 100%;
 }
 
 input,
@@ -51,6 +59,15 @@ button:hover {
   background-color: #545b62;
 }
 
+#show-leaderboard-btn {
+  background-color: #28a745;
+  margin-top: 10px;
+}
+
+#show-leaderboard-btn:hover {
+  background-color: #218838;
+}
+
 .row {
   display: flex;
   gap: 5px;
@@ -58,6 +75,11 @@ button:hover {
 
 .row input {
   width: calc(50% - 2.5px);
+}
+
+#detail-location, #detail-year, #detail-type, #detail-fatalities, #detail-country, #detail-coordinates {
+  font-weight: 600;
+  color: #007bff;
 }
 
 h2 {
@@ -112,74 +134,77 @@ canvas {
   margin-top: 15px;
 }
 
-/* Comparison Dashboard Styles */
-.comparison-controls {
-  margin-top: 15px;
-}
-
-.comparison-controls label {
-  font-weight: 600;
-  margin-top: 10px;
-  display: block;
-  color: #555;
-}
-
-.comparison-controls select {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-#comparisonSelection {
-  max-height: 150px;
+/* Leaderboard Styles */
+#leaderboard-view {
   overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 20px;
 }
 
-.comparison-option {
-  margin-bottom: 5px;
+.leaderboard-section {
+  margin-bottom: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
 }
 
-.comparison-option input {
-  margin-right: 8px;
-  width: auto;
-}
-
-.comparison-charts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.chart-container {
-  flex: 1;
-  min-width: 200px;
-  background: #f8f9fa;
-  border-radius: 4px;
-  padding: 10px;
-}
-
-.comparison-stats {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 4px;
-}
-
-.comparison-stat-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
+.leaderboard-section h3 {
+  margin-top: 0;
+  color: #333;
   border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
-.comparison-stat-row:last-child {
-  border-bottom: none;
+.leaderboard-controls {
+  margin-bottom: 20px;
+}
+
+#show-map-btn, #show-leaderboard-btn {
+  background-color: #28a745;
+  padding: 10px 15px;
+}
+
+#show-map-btn:hover, #show-leaderboard-btn:hover {
+  background-color: #218838;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+tr:hover {
+  background-color: #e9ecef;
+}
+
+.rank-1 {
+  font-weight: bold;
+  color: gold;
+}
+
+.rank-2 {
+  font-weight: bold;
+  color: silver;
+}
+
+.rank-3 {
+  font-weight: bold;
+  color: #cd7f32; /* bronze */
 }
