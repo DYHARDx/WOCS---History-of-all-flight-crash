@@ -979,8 +979,8 @@ def create_cost_analysis(df, selected_year=None):
     
     return cost_fig, risk_fig
 
-def create_day_of_week_analysis(df, selected_years=None):
-    """Analyze crashes by day of week with enhanced tooltips"""
+def create_survival_analysis_chart(df, selected_years=None):
+    """Survival rate analysis with enhanced tooltips"""
     filtered_df = df
     if selected_years:
         filtered_df = df[df['year'].between(selected_years[0], selected_years[1])]
@@ -2240,6 +2240,47 @@ def main():
             ⚠️ **Disclaimer**: This is a statistical model based on historical crash data and does not represent actual flight safety. 
             Modern aviation is extremely safe, and this calculator is for educational purposes only.
             """)
+
+    # Tab 6: Survival Rate Analysis
+    with tab6:
+        st.markdown('<h2 class="tab-header">🛡️ Survival Rate Analysis</h2>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            st.markdown("### 📅 Year Range Filter")
+            min_year_surv = int(df['year'].min())
+            max_year_surv = int(df['year'].max())
+            
+            surv_year_range = st.slider(
+                "Select Range:",
+                min_value=min_year_surv,
+                max_value=max_year_surv,
+                value=(min_year_surv, max_year_surv),
+                key="survival_years"
+            )
+            
+            # Key statistics
+            surv_filtered = df[df['year'].between(surv_year_range[0], surv_year_range[1])]
+            total_aboard_s = surv_filtered['Aboard'].sum()
+            total_fatal_s = surv_filtered['Fatalities'].sum()
+            total_survived = total_aboard_s - total_fatal_s
+            avg_rate = (total_survived / total_aboard_s * 100) if total_aboard_s > 0 else 0
+            
+            st.markdown("### 📊 Metrics")
+            st.metric("🛡️ Avg Survival Rate", f"{avg_rate:.1f}%")
+            st.metric("👥 Total Survivors", f"{int(total_survived):,}")
+            
+        with col2:
+            survival_fig = create_survival_analysis_chart(df, surv_year_range)
+            st.plotly_chart(survival_fig, use_container_width=True)
+            
+        st.markdown("""
+        <div class='metric-card' style='padding: 1rem; text-align: left;'>
+            <h4>💡 Insight</h4>
+            <p>This chart tracks the percentage of people aboard who survived crashes over time. 
+            An upward trend indicates improved safety measures, stronger aircraft construction, and better emergency protocols.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
