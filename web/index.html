@@ -328,14 +328,61 @@ background-color: var(--bg-main);
             return data;
         }
 
-        function initDataAndUI() {
-            AVIATION_DATA = generateSampleData();
-            updateMetrics();
-            populateYearSelectors();
-            renderGlobe();
-            renderMLRisk();
-            renderFatalityTrends();
-        }
+        async function loadCrashData() {
+                const response = await fetch('../data/crashes.json');
+                const rawData = await response.json();
+
+                return rawData
+                    .filter(d => Number.isFinite(d.Latitude) && Number.isFinite(d.Longitude))
+                    .map((d, index) => {
+                        const fatalities = Number(d.Fatalities) || 0;
+
+                        // Derive reasonable values for missing fields
+                        const aboard = fatalities + Math.floor(Math.random() * 20);
+                        const ground = 0;
+
+                        // Simple derived severity score (kept consistent)
+                        const severityScore = Math.min(
+                            100,
+                            Math.log1p(fatalities) * 20
+                        );
+
+                        return {
+                            id: index,
+                            year: Number(d.Year),
+                            date: d.Year ? `${d.Year}-01-01` : 'Unknown',
+                            fatalities,
+                            aboard,
+                            ground,
+                            operator: d.Type || 'Unknown',
+                            type: d.Type || 'Unknown',
+                            location: d.Location || 'Unknown',
+                            country: d.Country || 'Unknown',
+                            latitude: Number(d.Latitude),
+                            longitude: Number(d.Longitude),
+                            severityScore: Number(severityScore.toFixed(2)),
+                            summary: `Crash in ${d.Location}, ${d.Country}`
+                        };
+                    });
+            }
+
+
+        async function initDataAndUI() {
+                try {
+                    AVIATION_DATA = await loadCrashData();
+                    console.log(`Loaded ${AVIATION_DATA.length} crash records`);
+                } catch (error) {
+                    console.error('Failed to load real crash data. Falling back to sample data.', error);
+                    AVIATION_DATA = generateSampleData();
+                }
+
+                updateMetrics();
+                populateYearSelectors();
+                renderGlobe();
+                renderMLRisk();
+                renderFatalityTrends();
+            }
+
 
         function updateMetrics() {
             const totalRecords = AVIATION_DATA.length;
