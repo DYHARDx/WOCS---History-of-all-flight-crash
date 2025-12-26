@@ -52,7 +52,3 @@ body:
       label: "📊 Data Requirements"
       description: "Any new data fields or datasets needed?"
       placeholder: "Aircraft manufacturer column in crash dataset"
-
-
-
- 
